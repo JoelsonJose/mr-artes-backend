@@ -21,6 +21,10 @@ const Bolsa = sequelize.define(
         type: Sequelize.DECIMAL(10,2),
         allowNull: false,
     },
+    imagem: {
+        type: Sequelize.STRING,
+        allowNull: true,
+    },
     marcador:{
         type: Sequelize.STRING,
         allowNull: false,

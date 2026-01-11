@@ -2,7 +2,7 @@ const Bolsa = require("../models/Bolsa")
 
 class BolsaService {
 
-    async criarBolsa({nome, descricao, preco, marcador}) {
+    async criarBolsa({nome, descricao, preco, marcador, imagem}) {
         if (!nome || !descricao || !preco || !marcador){
             throw new Error("Todos os campos são obrigatórios") 
         }
@@ -15,7 +15,8 @@ class BolsaService {
             nome,
             descricao,
             preco,
-            marcador
+            marcador,
+            imagem
         });
 
         return bolsa;
