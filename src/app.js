@@ -2,6 +2,7 @@ require("dotenv").config();
 const http = require("http");
 const sequelize = require("./database/sequelize");
 const BolsaController = require("./controllers/BolsaController");
+const path = require("path");
 
 const server = http.createServer(async (req, res) => {
 
