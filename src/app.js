@@ -18,6 +18,32 @@ const server = http.createServer(async (req, res) => {
 
   console.log(req.method, req.url);
 
+   if (req.method === "GET" && req.url.startsWith("/images/")) {
+    const filePath = path.join(__dirname, req.url);
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.statusCode = 404;
+        res.end("Imagem não encontrada");
+        return;
+      }
+
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp"
+      };
+
+      res.setHeader("Content-Type", mimeTypes[ext] || "application/octet-stream");
+      res.statusCode = 200;
+      res.end(data);
+    });
+
+    return;
+  }
+
   if (req.method === "POST" && req.url === "/bolsas") {
     let body = "";
 
