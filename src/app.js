@@ -2,6 +2,7 @@ require("dotenv").config();
 const http = require("http");
 const sequelize = require("./database/sequelize");
 const BolsaController = require("./controllers/BolsaController");
+const UsuarioController = require("./controllers/UsuarioController"); // Importado
 const path = require("path");
 const fs = require("fs");
 
@@ -43,6 +44,42 @@ const server = http.createServer(async (req, res) => {
       res.end(data);
     });
 
+    return;
+  }
+
+  // ROTA DE CADASTRO DE USUÁRIO
+  if (req.method === "POST" && req.url === "/api/auth/register") {
+    let body = "";
+    req.on("data", chunk => {
+      body += chunk;
+    });
+    req.on("end", async () => {
+      try {
+        req.body = JSON.parse(body);
+        await UsuarioController.registrar(req, res);
+      } catch (error) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: "JSON inválido" }));
+      }
+    });
+    return;
+  }
+
+  // ROTA DE LOGIN DE USUÁRIO
+  if (req.method === "POST" && req.url === "/api/auth/login") {
+    let body = "";
+    req.on("data", chunk => {
+      body += chunk;
+    });
+    req.on("end", async () => {
+      try {
+        req.body = JSON.parse(body);
+        await UsuarioController.login(req, res);
+      } catch (error) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: "JSON inválido" }));
+      }
+    });
     return;
   }
 
