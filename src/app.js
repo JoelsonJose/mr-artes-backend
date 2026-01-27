@@ -66,7 +66,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === "GET" && req.url === "/bolsas") {
+  if (req.method === "GET" && req.url.startsWith("/bolsas")) {
     try {
       await BolsaController.listarBolsas(req, res);
     } catch (error) {
