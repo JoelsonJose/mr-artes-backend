@@ -6,7 +6,10 @@ class UsuarioController {
       const { nome, email, senha } = req.body;
 
       if (!nome || !email || !senha) {
-        return res.status(400).json({ message: 'Todos os campos são obrigatórios: nome, email e senha.' });
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: 'Todos os campos são obrigatórios: nome, email e senha.' }));
+        return;
       }
 
       const usuario = await UsuarioService.registrar(nome, email, senha);
@@ -18,13 +21,21 @@ class UsuarioController {
         createdAt: usuario.createdAt,
       };
 
-      return res.status(201).json(usuarioResponse);
+      res.statusCode = 201;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(usuarioResponse));
+
     } catch (error) {
       if (error.message === 'Este e-mail já está cadastrado.') {
-        return res.status(409).json({ message: error.message });
+        res.statusCode = 409;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: error.message }));
+        return;
       }
       console.error('Erro ao registrar usuário:', error);
-      return res.status(500).json({ message: 'Erro interno ao tentar registrar o usuário.' });
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Erro interno ao tentar registrar o usuário.' }));
     }
   }
 
@@ -33,19 +44,29 @@ class UsuarioController {
       const { email, senha } = req.body;
 
       if (!email || !senha) {
-        return res.status(400).json({ message: 'Email and senha são obrigatórios.' });
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: 'Email e senha são obrigatórios.' }));
+        return;
       }
 
       const { token } = await UsuarioService.login(email, senha);
 
-      return res.status(200).json({ token });
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ token }));
 
     } catch (error) {
       if (error.message === 'Credenciais inválidas') {
-        return res.status(401).json({ message: error.message });
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ message: error.message }));
+        return;
       }
       console.error('Erro ao fazer login:', error);
-      return res.status(500).json({ message: 'Erro interno ao tentar fazer login.' });
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ message: 'Erro interno ao tentar fazer login.' }));
     }
   }
 }
