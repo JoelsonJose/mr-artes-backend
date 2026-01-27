@@ -10,7 +10,7 @@ const server = http.createServer(async (req, res) => {
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Adicionar Authorization
   res.setHeader("Content-Type", "application/json");
 
   if (req.method === "OPTIONS") {
@@ -83,7 +83,8 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === "POST" && req.url === "/bolsas") {
+  // ROTA DE BOLSAS - CRIAR
+  if (req.method === "POST" && req.url === "/api/bolsas") {
     let body = "";
 
     req.on("data", chunk => {
@@ -103,7 +104,8 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === "GET" && req.url.startsWith("/bolsas")) {
+  // ROTA DE BOLSAS - LISTAR
+  if (req.method === "GET" && req.url.startsWith("/api/bolsas")) {
     try {
       await BolsaController.listarBolsas(req, res);
     } catch (error) {
