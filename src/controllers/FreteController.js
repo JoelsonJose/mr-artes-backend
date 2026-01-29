@@ -6,7 +6,9 @@ class FreteController {
       const { cepDestino, produtos } = req.body;
 
       if (!cepDestino) {
-        return res.status(400).json({ error: 'CEP de destino é obrigatório.' });
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'CEP de destino é obrigatório.' }));
+        return;
       }
 
       // Garante que 'produtos' seja um array, mesmo que vazio
@@ -14,11 +16,12 @@ class FreteController {
 
       const resultado = await FreteService.calcular(cepDestino, productList);
       
-      return res.json(resultado);
+      res.statusCode = 200;
+      res.end(JSON.stringify(resultado));
     } catch (error) {
       console.error('Erro ao calcular frete:', error);
-      // Retorna a mensagem de erro do serviço, se disponível
-      return res.status(500).json({ error: error.message || 'Erro interno no servidor.' });
+      res.statusCode = 500;
+      res.end(JSON.stringify({ error: error.message || 'Erro interno no servidor.' }));
     }
   }
 }
