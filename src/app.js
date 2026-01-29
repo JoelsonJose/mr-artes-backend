@@ -124,11 +124,19 @@ const server = http.createServer(async (req, res) => {
     });
     req.on("end", async () => {
       try {
-        req.body = JSON.parse(body);
+        // Adiciona um guarda para o caso do body ser vazio
+        if (body) {
+          req.body = JSON.parse(body);
+        } else {
+          req.body = {};
+        }
         await FreteController.calcularFrete(req, res);
       } catch (error) {
+        console.error("ERRO AO PROCESSAR REQUISIÇÃO DE FRETE:");
+        console.error("CORPO BRUTO RECEBIDO:", body);
+        console.error("ERRO DE PARSE:", error);
         res.statusCode = 400;
-        res.end(JSON.stringify({ error: "JSON inválido" }));
+        res.end(JSON.stringify({ error: "JSON inválido ou corpo da requisição vazio." }));
       }
     });
     return;
