@@ -3,6 +3,7 @@ const http = require("http");
 const sequelize = require("./database/sequelize");
 const BolsaController = require("./controllers/BolsaController");
 const UsuarioController = require("./controllers/UsuarioController"); // Importado
+const FreteController = require("./controllers/FreteController");
 const path = require("path");
 const fs = require("fs");
 
@@ -112,6 +113,24 @@ const server = http.createServer(async (req, res) => {
       res.statusCode = 500;
       res.end(JSON.stringify({ error: "Erro ao listar bolsas" }));
     }
+    return;
+  }
+
+  // ROTA DE CÁLCULO DE FRETE
+  if (req.method === "POST" && req.url === "/api/frete/calcular") {
+    let body = "";
+    req.on("data", chunk => {
+      body += chunk;
+    });
+    req.on("end", async () => {
+      try {
+        req.body = JSON.parse(body);
+        await FreteController.calcularFrete(req, res);
+      } catch (error) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: "JSON inválido" }));
+      }
+    });
     return;
   }
 
